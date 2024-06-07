@@ -1,0 +1,17 @@
+{
+    "name": "max/aluraplay",
+    "description": "Project with MVC",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Max\\Aluraplay\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MaxiiXx23",
+            "email": "max.232017@gmail.com"
+        }
+    ],
+    "require": {}
+}
