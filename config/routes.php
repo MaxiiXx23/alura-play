@@ -15,4 +15,6 @@ return [
     'POST|/edit-video' => EditVideoController::class,
     'GET|/remove' => RemoveVideoController::class,
     'GET|/login' => LoginController::class,
+    'POST|/login' => LoginController::class,
+    'GET|/logout' => LoginController::class,
 ];

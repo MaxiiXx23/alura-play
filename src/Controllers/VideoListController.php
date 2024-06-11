@@ -18,6 +18,7 @@ class VideoListController
 
     public function execute()
     {
+
         $videos = $this->videoRepository->getAll();
         require_once __DIR__ . '/../views/list-videos.php';
     }
