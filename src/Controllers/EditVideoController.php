@@ -7,9 +7,13 @@ use Max\Aluraplay\Domain\Models\Video;
 use Max\Aluraplay\Infra\Repositories\VideoRepository\VideoRepository;
 use Max\Aluraplay\Traits\ErrorMessageTrait;
 use Max\Aluraplay\Utils\Upload;
+use Nyholm\Psr7\Response;
 use PDO;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class EditVideoController
+class EditVideoController implements RequestHandlerInterface
 {
     use ErrorMessageTrait;
     private VideoRepository $videoRepository;
@@ -20,22 +24,24 @@ class EditVideoController
         $this->videoRepository = new VideoRepository($connectionBD);
     }
 
-    public function execute()
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-        $url = filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL);
-        $title = filter_input(INPUT_POST, 'title');
+        $queryParams = $request->getQueryParams();
+        $body = $request->getParsedBody();
+
+        $id = filter_var($queryParams['id'], FILTER_VALIDATE_INT);
+        $url = filter_var($body['url'], FILTER_VALIDATE_URL);
+        $title = filter_var($body['title']);
 
         if (!$id) {
-            header('Location: /');
-            return;
+            return new Response(400, ["Location" => "/"]);
         }
 
         if (!$url || !$title) {
             // usando o trait("hook") para usar definir o error
             $this->setErrorMessage("Dados inválidos informados.");
-            header('Location: /edit-video?id=' . $id);
-            return;
+            $urlEndpoint = "/edit-video?id=$id";
+            return new Response(400, ["Location" => $urlEndpoint]);
         }
 
         $updateVideo = new Video($id, $url, $title, null);
@@ -59,10 +65,10 @@ class EditVideoController
                 $this->videoRepository->update($updateVideo);
             }
 
-            header('Location: /');
+            return new Response(200, ["Location" => "/"]);
         } catch (Exception $e) {
             $this->setErrorMessage("Dados ao editar vídeo.");
-            header('Location: /edit-video');
+            return new Response(200, ["Location" => "/edit-video"]);
         }
     }
 }

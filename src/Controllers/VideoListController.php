@@ -3,9 +3,13 @@
 namespace Max\Aluraplay\Controllers;
 
 use Max\Aluraplay\Infra\Repositories\VideoRepository\VideoRepository;
+use Nyholm\Psr7\Response;
 use PDO;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class VideoListController extends RenderHTMLController
+class VideoListController extends RenderHTMLController implements RequestHandlerInterface
 {
 
     private VideoRepository $videoRepository;
@@ -16,10 +20,12 @@ class VideoListController extends RenderHTMLController
         $this->videoRepository = new VideoRepository($connectionBD);
     }
 
-    public function execute()
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
 
         $videos = $this->videoRepository->getAll();
-        echo $this->renderTemplate('list-videos', ["videos" => $videos]);
+        $content = $this->renderTemplate('list-videos', ["videos" => $videos]);
+
+        return new Response(status: 200, body: $content);
     }
 }

@@ -2,12 +2,17 @@
 
 namespace Max\Aluraplay\Controllers;
 
-class Error404Controller
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+
+class Error404Controller implements RequestHandlerInterface
 {
 
-    public function execute()
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         // informo ao navegado o statusCode HTTP
-        http_response_code(404);
+        return new Response(404);
     }
 }

@@ -4,9 +4,13 @@ namespace Max\Aluraplay\Controllers;
 
 use Max\Aluraplay\Domain\Models\User;
 use Max\Aluraplay\Infra\Repositories\UserRepository\UserRepository;
+use Nyholm\Psr7\Response;
 use PDO;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class LoginController extends RenderHTMLController
+class LoginController extends RenderHTMLController implements RequestHandlerInterface
 {
     private UserRepository $userRepository;
 
@@ -16,22 +20,25 @@ class LoginController extends RenderHTMLController
         $this->userRepository = new UserRepository($connectionBD);
     }
 
-    public function execute(): void
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         // caso o usuário já esteja logado, eu não permito que ele acesse a tela de login
         // assim, o redirecionando para a Home da aplicação;
         if (array_key_exists('logado', $_SESSION) && $_SESSION['logado']) {
-            header("Location: /");
-            return;
+            return new Response(401, [
+                'Location' => "/",
+            ]);
         }
 
-        echo $this->renderTemplate('login');
+        $response = new Response(status: 200, body: $this->renderTemplate('login'));
+        return  $response;
     }
 
-    public function auth(): void
+    public function auth(ServerRequestInterface $request): ResponseInterface
     {
-        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-        $password = filter_input(INPUT_POST, 'password');
+        $body = $request->getParsedBody();
+        $email = filter_var($body['email'], FILTER_VALIDATE_EMAIL);
+        $password = filter_var($body['password']);
 
         $user = new User(null, $email, $password);
 
@@ -39,14 +46,18 @@ class LoginController extends RenderHTMLController
 
         if (!$userAuth) {
             $_SESSION['error-message'] = "E-mail ou senha incorretos";
-            header('Location: /login');
-            return;
+            return new Response(401, [
+                'Location' => '/login'
+            ]);
         }
+
         $_SESSION['logado'] = true;
-        header('Location: /');
+        return new Response(200, [
+            'Location' => '/'
+        ]);
     }
 
-    public function logout(): void
+    public function logout(ServerRequestInterface $request): ResponseInterface
     {
         session_destroy();
         // Obs: em vez de destruir a sessão, seria possível inválidar o dado
@@ -56,6 +67,8 @@ class LoginController extends RenderHTMLController
         // ou 2°:
         // unset($_SESSION['logado']);
 
-        header("Location: /login");
+        return new Response(200, [
+            'Location' => '/login'
+        ]);
     }
 }

@@ -2,6 +2,9 @@
 
 use Max\Aluraplay\Controllers\Error404Controller;
 use Max\Aluraplay\Infra\Database\ConnectionDB;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7Server\ServerRequestCreator;
+use Psr\Container\ContainerInterface;
 
 // Sempre que eu for trabalhar com sessions preciso iniciar a session;
 // Aqui estou ativando a session de forma GLOBALMENTE
@@ -16,7 +19,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $routes = require_once __DIR__ . '/../config/routes.php';
 
-$connectionBD = ConnectionDB::execute();
+/** @var ContainerInterface */
+$diContainer = require_once __DIR__ . '/../config/dependencies.php';
+
+// $connectionBD = ConnectionDB::execute();
 
 // se caminho/endpoint não for informado redirecionamos para a "/"
 $pathInfo = $_SERVER['PATH_INFO'] ?? '/';
@@ -37,19 +43,41 @@ if (!array_key_exists('logado', $_SESSION) && !$isLoginRoute) {
 
 if (array_key_exists($key, $routes)) {
     $controllerClass = $routes[$key];
-
-    $controller = new $controllerClass($connectionBD);
+    $controller = $diContainer->get($controllerClass);
+    // $controller = new $controllerClass($connectionBD);
 } else {
     $controller = new Error404Controller();
 }
 
+$psr17Factory = new Psr17Factory();
+
+$creator = new ServerRequestCreator(
+    $psr17Factory, // ServerRequestFactory
+    $psr17Factory, // UriFactory
+    $psr17Factory, // UploadedFileFactory
+    $psr17Factory  // StreamFactory
+);
+
+$serverRequest = $creator->fromGlobals();
+
+// Essa Condicional só existe pois, decidi usar além do método handle, métodos adicionais
+// como por exemplo o "auth" ou "logout"
+$response;
 if ($key == "POST|/login") {
 
-    $controller->auth();
+    $response = $controller->auth($serverRequest);
 } else if ($key == "GET|/logout") {
-    // echo "olá";
-    // exit();
-    $controller->logout();
+
+    $response = $controller->logout($serverRequest);
 } else {
-    $controller->execute();
+    $response =  $controller->handle($serverRequest);
 }
+
+http_response_code($response->getStatusCode());
+foreach ($response->getHeaders() as $name => $values) {
+    foreach ($values as $value) {
+        header(sprintf('%s: %s', $name, $value), false);
+    }
+}
+
+echo $response->getBody();
