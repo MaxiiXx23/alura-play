@@ -2,7 +2,9 @@
 
 use Max\Aluraplay\Controllers\AddVideoController;
 use Max\Aluraplay\Controllers\EditVideoController;
+use Max\Aluraplay\Controllers\JsonVideoListController;
 use Max\Aluraplay\Controllers\LoginController;
+use Max\Aluraplay\Controllers\NewJsonVideoController;
 use Max\Aluraplay\Controllers\RemoveVideoController;
 use Max\Aluraplay\Controllers\VideoFormController;
 use Max\Aluraplay\Controllers\VideoListController;
@@ -17,4 +19,6 @@ return [
     'GET|/login' => LoginController::class,
     'POST|/login' => LoginController::class,
     'GET|/logout' => LoginController::class,
+    'GET|/json-videos' => JsonVideoListController::class,
+    'POST|/create-video-json' => NewJsonVideoController::class,
 ];
