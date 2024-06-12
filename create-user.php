@@ -12,7 +12,7 @@ $connection = ConnectionDB::execute();
 
 $userRepository = new UserRepository($connection);
 
-$user = new User(null, 'max.dev23@gmail.com', 'max2323');
+$user = new User(null, 'max.232017@gmail.com', 'max2323');
 
 $userRepository->create($user);
 

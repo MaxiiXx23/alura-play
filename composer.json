@@ -13,5 +13,7 @@
             "email": "max.232017@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "psr/http-message": "^2.0"
+    }
 }

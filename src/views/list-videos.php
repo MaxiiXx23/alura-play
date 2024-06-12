@@ -14,7 +14,7 @@
             <?php endif ?>
             <div class="descricao-video">
                 <img src="./img/logo.png" alt="logo canal alura">
-                <h3><?= $video->getTitle() ?></h3>
+                <h3 class="fs-6"><?= $video->getTitle() ?></h3>
                 <div class="acoes-video">
                     <a href="/edit-video?id=<?= $video->getId() ?>">Editar</a>
                     <a href="/remove?id=<?= $video->getId() ?>">Excluir</a>

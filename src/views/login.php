@@ -2,6 +2,8 @@
 
 <main class="container">
 
+    <?php require_once 'flashErrorMessage.php' ?>
+
     <form class="container__formulario" action="/login" method="POST">
         <h2 class="formulario__titulo">Efetue login</h3>
             <div class="formulario__campo">

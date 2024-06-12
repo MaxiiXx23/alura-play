@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/estilos.css">
     <link rel="stylesheet" href="/css/estilos-form.css">
     <link rel="stylesheet" href="/css/flexbox.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <title>AluraPlay</title>
     <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
 </head>

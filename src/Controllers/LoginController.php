@@ -6,7 +6,7 @@ use Max\Aluraplay\Domain\Models\User;
 use Max\Aluraplay\Infra\Repositories\UserRepository\UserRepository;
 use PDO;
 
-class LoginController
+class LoginController extends RenderHTMLController
 {
     private UserRepository $userRepository;
 
@@ -24,7 +24,8 @@ class LoginController
             header("Location: /");
             return;
         }
-        require_once __DIR__ . '/../views/login.php';
+
+        echo $this->renderTemplate('login');
     }
 
     public function auth(): void
@@ -37,6 +38,7 @@ class LoginController
         $userAuth = $this->userRepository->auth($user);
 
         if (!$userAuth) {
+            $_SESSION['error-message'] = "E-mail ou senha incorretos";
             header('Location: /login');
             return;
         }

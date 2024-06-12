@@ -5,7 +5,7 @@ namespace Max\Aluraplay\Controllers;
 use Max\Aluraplay\Infra\Repositories\VideoRepository\VideoRepository;
 use PDO;
 
-class VideoListController
+class VideoListController extends RenderHTMLController
 {
 
     private VideoRepository $videoRepository;
@@ -20,6 +20,6 @@ class VideoListController
     {
 
         $videos = $this->videoRepository->getAll();
-        require_once __DIR__ . '/../views/list-videos.php';
+        echo $this->renderTemplate('list-videos', ["videos" => $videos]);
     }
 }

@@ -5,11 +5,14 @@ namespace Max\Aluraplay\Controllers;
 use Exception;
 use Max\Aluraplay\Domain\Models\Video;
 use Max\Aluraplay\Infra\Repositories\VideoRepository\VideoRepository;
+use Max\Aluraplay\Traits\ErrorMessageTrait;
 use Max\Aluraplay\Utils\Upload;
 use PDO;
 
 class AddVideoController
 {
+    // Agora estou usando uma Trait(espécie de "Hook" do react)
+    use ErrorMessageTrait;
     private VideoRepository $videoRepository;
 
     public function __construct(PDO $connectionBD)
@@ -24,7 +27,9 @@ class AddVideoController
         $title = filter_input(INPUT_POST, 'title');
 
         if (!$url || !$title) {
-            header('Location: /?sucesso=1');
+            // usando o trait("hook") para usar definir o error
+            $this->setErrorMessage("Dados inválidos informados.");
+            header('Location: /add-video');
             return;
         }
 
@@ -36,9 +41,10 @@ class AddVideoController
 
             $this->videoRepository->create($newVideo);
 
-            header('Location: /?sucesso=0');
+            header('Location: /');
         } catch (Exception $e) {
-            header('Location: /?sucesso=1');
+            $this->setErrorMessage("Dados ao adicionar vídeo.");
+            header('Location: /add-video');
         }
     }
 }

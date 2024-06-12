@@ -6,7 +6,7 @@ use Max\Aluraplay\Domain\Models\Video;
 use Max\Aluraplay\Infra\Repositories\VideoRepository\VideoRepository;
 use PDO;
 
-class VideoFormController
+class VideoFormController extends RenderHTMLController
 {
     private VideoRepository $videoRepository;
 
@@ -24,6 +24,6 @@ class VideoFormController
             $videoFound = $this->videoRepository->getById($id);
         }
 
-        require_once __DIR__ . '/../views/form-video.php';
+        echo $this->renderTemplate('form-video', ['video' => $videoFound, 'id' => $id]);
     }
 }
