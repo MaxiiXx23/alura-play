@@ -12,5 +12,6 @@ interface IVideoRepository
     public function getAll(): array;
     public function create(Video $video): void;
     public function update(Video $video): void;
+    public function updateThumbnail(Video $video): void;
     public function removeById(int $id): void;
 }

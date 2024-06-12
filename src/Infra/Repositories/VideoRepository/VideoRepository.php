@@ -18,7 +18,7 @@ class VideoRepository implements IVideoRepository
 
     public function getById(int $id): Video
     {
-        $sqlQuery = "SELECT id, url, title FROM videos WHERE id=:id;";
+        $sqlQuery = "SELECT id, url, title, image_path FROM videos WHERE id=:id;";
         $stmt = $this->pdo->prepare($sqlQuery);
         $stmt->execute([
             ":id" => $id
@@ -31,7 +31,7 @@ class VideoRepository implements IVideoRepository
     /** @return Video[] */
     public function getAll(): array
     {
-        $sqlQuery = "SELECT id, url, title FROM videos;";
+        $sqlQuery = "SELECT id, url, title, image_path FROM videos;";
         $stmt = $this->pdo->prepare($sqlQuery);
         $stmt->execute();
 
@@ -40,11 +40,12 @@ class VideoRepository implements IVideoRepository
     }
     public function create(Video $video): void
     {
-        $sqlQuery = "INSERT INTO  videos (url, title) VALUES (:url, :title);";
+        $sqlQuery = "INSERT INTO  videos (url, title, image_path) VALUES (:url, :title, :imagePath);";
         $stmt = $this->pdo->prepare($sqlQuery);
         $stmt->execute([
             ":url" => $video->getURL(),
             ":title" => $video->getTitle(),
+            ":imagePath" => $video->getFilePath(),
         ]);
     }
     public function update(Video $video): void
@@ -57,6 +58,17 @@ class VideoRepository implements IVideoRepository
             ":title" => $video->getTitle(),
         ]);
     }
+
+    public function updateThumbnail(Video $video): void
+    {
+        $sqlQuery = "UPDATE videos SET image_path=:imagePath WHERE id=:id;";
+        $stmt = $this->pdo->prepare($sqlQuery);
+        $stmt->execute([
+            ":id" => $video->getId(),
+            ":imagePath" => $video->getFilePath(),
+        ]);
+    }
+
     public function removeById(int $id): void
     {
         $sqlQuery = "DELETE FROM videos WHERE id=:id;";
@@ -75,6 +87,7 @@ class VideoRepository implements IVideoRepository
             $videoData['id'],
             $videoData['url'],
             $videoData['title'],
+            $videoData['image_path']
         );
         return $video;
     }
@@ -90,6 +103,7 @@ class VideoRepository implements IVideoRepository
                 $videoData['id'],
                 $videoData['url'],
                 $videoData['title'],
+                $videoData['image_path']
             );
             return $video;
         }, $videoDataList);

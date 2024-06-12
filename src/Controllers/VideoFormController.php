@@ -19,7 +19,7 @@ class VideoFormController
     public function execute()
     {
         $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-        $videoFound = new Video(null, "", "");
+        $videoFound = new Video(null, "", "", null);
         if ($id) {
             $videoFound = $this->videoRepository->getById($id);
         }

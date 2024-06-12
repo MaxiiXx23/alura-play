@@ -5,6 +5,7 @@ namespace Max\Aluraplay\Controllers;
 use Exception;
 use Max\Aluraplay\Domain\Models\Video;
 use Max\Aluraplay\Infra\Repositories\VideoRepository\VideoRepository;
+use Max\Aluraplay\Utils\Upload;
 use PDO;
 
 class EditVideoController
@@ -28,11 +29,26 @@ class EditVideoController
             return;
         }
 
+        $updateVideo = new Video($id, $url, $title, null);
+
+        Upload::execute($updateVideo);
+
         try {
 
-            $updateVideo = new Video($id, $url, $title);
+            if ($updateVideo->getFilePath()) {
 
-            $this->videoRepository->update($updateVideo);
+                $this->videoRepository->update($updateVideo);
+                $this->videoRepository->updateThumbnail($updateVideo);
+                $imagePathDelete = __DIR__ . "/../../public/img/uploads/" . $_POST['delete_file'];
+                if (file_exists($imagePathDelete)) {
+                    unlink($imagePathDelete);
+                } else {
+
+                    echo "File does not exists";
+                }
+            } else {
+                $this->videoRepository->update($updateVideo);
+            }
 
             header('Location: /?sucesso=0');
         } catch (Exception $e) {

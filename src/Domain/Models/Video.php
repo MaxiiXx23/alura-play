@@ -8,12 +8,14 @@ class Video
     private ?int $id;
     private string $url;
     private string $title;
+    private ?string $filePath;
 
-    public function __construct(?int $id, string $url, string $title)
+    public function __construct(?int $id, string $url, string $title, ?string $filePath)
     {
         $this->id = $id;
         $this->url = $url;
         $this->title = $title;
+        $this->filePath = $filePath;
     }
 
     public function getId(): ?int
@@ -29,5 +31,24 @@ class Video
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function setFilePath(string $filePath): void
+    {
+        $this->filePath = $filePath;
+    }
+
+    public function getFilePath(): ?string
+    {
+        return $this->filePath;
+    }
+
+    public function getFilePathURL(): ?string
+    {
+        if (!$this->filePath) {
+            return null;
+        }
+        $path = "/img/uploads/" . $this->filePath;
+        return  $path;
     }
 }

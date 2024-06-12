@@ -6,6 +6,9 @@ use Max\Aluraplay\Infra\Database\ConnectionDB;
 // Sempre que eu for trabalhar com sessions preciso iniciar a session;
 // Aqui estou ativando a session de forma GLOBALMENTE
 session_start();
+// sempre que uma session for iniciada o seu ID será regerado
+// para evitar possível ataques de roubo de session
+session_regenerate_id();
 
 // Com Frontend Controll consigo importar somente uma vez o autoload
 // funcionando assim para todos os arquivos que precisariam dele

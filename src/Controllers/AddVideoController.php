@@ -5,6 +5,7 @@ namespace Max\Aluraplay\Controllers;
 use Exception;
 use Max\Aluraplay\Domain\Models\Video;
 use Max\Aluraplay\Infra\Repositories\VideoRepository\VideoRepository;
+use Max\Aluraplay\Utils\Upload;
 use PDO;
 
 class AddVideoController
@@ -27,9 +28,11 @@ class AddVideoController
             return;
         }
 
-        try {
+        $newVideo = new Video(null, $url, $title, null);
 
-            $newVideo = new Video(null, $url, $title);
+        Upload::execute($newVideo);
+
+        try {
 
             $this->videoRepository->create($newVideo);
 

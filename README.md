@@ -28,3 +28,7 @@ composer install
 ```bash
 php -S localhost:8080 -t public/
 ```
+
+4. SQL query para a criação das tabelas(MYSQL):
+   1. **users**: "CREATE TABLE users (id INTEGER PRIMARY KEY, email TEXT, password TEXT);"
+   2. **videos**: "CREATE TABLE videos (id INTEGER PRIMARY KEY, url TEXT, title TEXT, image_path TEXT);"
