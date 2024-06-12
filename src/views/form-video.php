@@ -1,8 +1,8 @@
-<?php require_once 'header.php' ?>
+<?php $this->layout('layout') ?>
 
 <main class="container">
 
-    <?php require_once 'flashErrorMessage.php' ?>
+    <?php $this->insert('flashErrorMessage'); ?>
 
     <form class="container__formulario" action="<?= $id ? '/edit-video?id=' . $video->getId() : '/add-video' ?>" method="POST" enctype="multipart/form-data">
         <h2 class="formulario__titulo">Envie um vídeo!</h2>
@@ -30,4 +30,3 @@
     </form>
 
 </main>
-<?php require_once 'final.php' ?>

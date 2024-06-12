@@ -1,4 +1,4 @@
-<?php require_once 'header.php' ?>
+<?php $this->layout('layout'); ?>
 
 <ul class="videos__container" alt="videos alura">
 
@@ -25,4 +25,3 @@
     <?php } ?>
 
 </ul>
-<?php require_once 'final.php' ?>

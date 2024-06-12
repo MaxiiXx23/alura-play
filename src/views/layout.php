@@ -29,3 +29,10 @@
         </nav>
 
     </header>
+
+    <?= $this->section('content') ?>
+
+</body>
+<script src="/js/bootstrap.min.js"></script>
+
+</html>

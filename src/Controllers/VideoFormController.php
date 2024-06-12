@@ -2,6 +2,7 @@
 
 namespace Max\Aluraplay\Controllers;
 
+use League\Plates\Engine;
 use Max\Aluraplay\Domain\Models\Video;
 use Max\Aluraplay\Infra\Repositories\VideoRepository\VideoRepository;
 use Nyholm\Psr7\Response;
@@ -10,14 +11,16 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class VideoFormController extends RenderHTMLController implements RequestHandlerInterface
+class VideoFormController implements RequestHandlerInterface
 {
     private VideoRepository $videoRepository;
+    private Engine $templateEngine;
 
-    public function __construct(PDO $connectionBD)
+    public function __construct(PDO $connectionBD, Engine $templateEngine)
     {
 
         $this->videoRepository = new VideoRepository($connectionBD);
+        $this->templateEngine = $templateEngine;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -29,7 +32,7 @@ class VideoFormController extends RenderHTMLController implements RequestHandler
             $videoFound = $this->videoRepository->getById($id);
         }
 
-        $content = $this->renderTemplate('form-video', ['video' => $videoFound, 'id' => $id]);
+        $content = $this->templateEngine->render('form-video', ['video' => $videoFound, 'id' => $id]);
 
         return new Response(status: 200, body: $content);
     }

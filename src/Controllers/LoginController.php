@@ -2,6 +2,7 @@
 
 namespace Max\Aluraplay\Controllers;
 
+use League\Plates\Engine;
 use Max\Aluraplay\Domain\Models\User;
 use Max\Aluraplay\Infra\Repositories\UserRepository\UserRepository;
 use Nyholm\Psr7\Response;
@@ -10,14 +11,16 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class LoginController extends RenderHTMLController implements RequestHandlerInterface
+class LoginController implements RequestHandlerInterface
 {
     private UserRepository $userRepository;
+    private Engine $templateEngine;
 
-    public function __construct(PDO $connectionBD)
+    public function __construct(PDO $connectionBD, Engine $templateEngine)
     {
 
         $this->userRepository = new UserRepository($connectionBD);
+        $this->templateEngine = $templateEngine;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -30,7 +33,7 @@ class LoginController extends RenderHTMLController implements RequestHandlerInte
             ]);
         }
 
-        $response = new Response(status: 200, body: $this->renderTemplate('login'));
+        $response = new Response(status: 200, body: $this->templateEngine->render('login'));
         return  $response;
     }
 

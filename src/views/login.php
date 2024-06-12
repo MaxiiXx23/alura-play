@@ -1,8 +1,8 @@
-<?php require_once 'header.php' ?>
+<?php $this->layout('layout') ?>
 
 <main class="container">
 
-    <?php require_once 'flashErrorMessage.php' ?>
+    <?php $this->insert('flashErrorMessage'); ?>
 
     <form class="container__formulario" action="/login" method="POST">
         <h2 class="formulario__titulo">Efetue login</h3>
@@ -21,4 +21,3 @@
     </form>
 
 </main>
-<?php require_once 'final.php' ?>
